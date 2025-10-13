@@ -18,4 +18,6 @@ public interface EmployeeService {
     Result add(EmployeeDTO employeeDTO);
 
     Result queryByPage(EmployeePageQueryDTO employeePageQueryDTO);
+
+    Result setStatus(Integer status, Long id);
 }

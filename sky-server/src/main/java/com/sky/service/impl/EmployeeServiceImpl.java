@@ -107,4 +107,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    @Override
+    public Result setStatus(Integer status, Long id) {
+
+        Employee build = Employee.builder().id(id).status(status).build();
+        employeeMapper.update(build);
+        return Result.success();
+    }
+
 }
