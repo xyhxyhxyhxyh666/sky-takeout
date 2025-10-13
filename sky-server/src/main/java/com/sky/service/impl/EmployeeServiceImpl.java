@@ -84,7 +84,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
         //设置创建人
-        // TODO 后期改为当前登录用户id
         employee.setCreateUser(BaseContext.getCurrentId());
         employee.setUpdateUser(BaseContext.getCurrentId());
 
