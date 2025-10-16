@@ -1,20 +1,25 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealMapper;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class DishServiceImp implements DishService {
@@ -24,6 +29,9 @@ public class DishServiceImp implements DishService {
 
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     @Override
     public Result add(DishDTO dishDTO) {
@@ -43,4 +51,37 @@ public class DishServiceImp implements DishService {
 
         return Result.success();
     }
+
+    @Override
+    public PageResult queryByPage(DishPageQueryDTO dishPageQueryDTO) {
+
+        PageHelper.startPage(dishPageQueryDTO.getPage(),dishPageQueryDTO.getPageSize());
+
+        Page<DishVO> page = dishMapper.queryByPage(dishPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public Result delete(List<Long> ids) {
+
+        for (Long id : ids) {
+            Dish dish = dishMapper.selectById(id);
+            if (dish.getStatus() == StatusConstant.ENABLE) {
+                return Result.error("起售中的菜品不能删除");
+            }
+        }
+
+        List<Long> setMeals = setmealMapper.selectIdsByDishIds(ids);
+        if (setMeals != null && setMeals.size() > 0) {
+            return Result.error("关联了套餐，不能删除");
+        }
+
+        for (Long id : ids) {
+            dishMapper.deleteById(id);
+            dishFlavorMapper.deleteByDishId(id);
+        }
+
+        return Result.success();
+    }
+
 }
