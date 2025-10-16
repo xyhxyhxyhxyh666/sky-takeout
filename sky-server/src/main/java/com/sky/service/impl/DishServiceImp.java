@@ -84,4 +84,39 @@ public class DishServiceImp implements DishService {
         return Result.success();
     }
 
+    @Override
+    public DishVO getById(Long id) {
+
+        Dish dish = dishMapper.selectById(id);
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+
+        List<DishFlavor> flavors = dishFlavorMapper.getByDishId(id);
+        dishVO.setFlavors(flavors);
+
+        return dishVO;
+    }
+
+    @Override
+    public Result update(DishDTO dishDTO) {
+
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+
+        dishMapper.update(dish);
+
+        dishFlavorMapper.deleteByDishId(dishDTO.getId());
+
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        for (DishFlavor flavor : flavors) {
+            flavor.setDishId(dishDTO.getId());
+        }
+
+        if (flavors != null && !flavors.isEmpty()) {
+            dishFlavorMapper.insertBatch(flavors);
+        }
+
+        return null;
+    }
+
 }
