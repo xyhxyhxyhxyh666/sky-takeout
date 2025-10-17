@@ -116,7 +116,7 @@ public class DishServiceImp implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
 
-        return null;
+        return Result.success();
     }
 
     @Override
@@ -125,6 +125,16 @@ public class DishServiceImp implements DishService {
         Dish build = Dish.builder().status(StatusConstant.ENABLE).categoryId(categoryId).build();
         List<Dish> dishes = dishMapper.selectByCategoryId(build);
         return dishes;
+    }
+
+    @Override
+    public Result setStatus(Integer status, Long id) {
+
+        Dish build = Dish.builder().status(status).id(id).build();
+        dishMapper.update(build);
+
+        return Result.success();
+
     }
 
 }

@@ -21,4 +21,6 @@ public interface SetmealService {
     Result updateSetmeal(SetmealDTO setmealDTO);
 
     Result delete(List<Long> ids);
+
+    Result startOrStop(Integer status, Long id);
 }

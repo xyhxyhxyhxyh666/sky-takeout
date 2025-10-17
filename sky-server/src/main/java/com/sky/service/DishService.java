@@ -21,4 +21,6 @@ public interface DishService {
     Result update(DishDTO dishDTO);
 
     List<Dish> dishListByCategoryId(Long categoryId);
+
+    Result setStatus(Integer status, Long id);
 }

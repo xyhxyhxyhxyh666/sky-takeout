@@ -9,6 +9,7 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +33,9 @@ public class SetmealServiceImp implements SetmealService {
 
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+
+    @Autowired
+    private DishMapper dishMapper;
 
     @Transactional
     @Override
@@ -128,5 +133,23 @@ public class SetmealServiceImp implements SetmealService {
             setmealDishMapper.deleteBySetmealId(id);
         }
         return Result.success();
+    }
+
+    @Override
+    public Result startOrStop(Integer status, Long id) {
+
+        Setmeal setmeal = Setmeal.builder().id(id).status(status).build();
+        List<SetmealDish> setmealDishes = setmealDishMapper.getSetmealDishes(id);
+        for (SetmealDish setmealDish : setmealDishes) {
+            Long dishId = setmealDish.getDishId();
+            Dish dish = dishMapper.selectById(dishId);
+            if (dish.getStatus() == StatusConstant.DISABLE && status == StatusConstant.ENABLE) {
+                return Result.error("关联的菜品未起售");
+            }
+        }
+
+        setmealMapper.update(setmeal);
+        return Result.success();
+
     }
 }
