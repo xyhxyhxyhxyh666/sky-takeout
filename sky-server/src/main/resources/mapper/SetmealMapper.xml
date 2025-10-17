@@ -38,5 +38,54 @@
     <select id="queryIdByName" resultType="java.lang.Long">
         select id from setmeal where name = #{name}
     </select>
+    
+    <select id="queryByPage" resultType="com.sky.vo.SetmealVO" parameterType="com.sky.dto.SetmealPageQueryDTO">
+        select
+        s.id,
+        s.category_id,
+        s.name,
+        s.price,
+        s.status,
+        s.description,
+        s.image,
+        s.create_time,
+        case when s.update_time is null then s.create_time else s.update_time end as update_time,
+        s.create_user,
+        s.update_user,
+        c.name categoryName
+        from
+        setmeal s
+        left join
+        category c
+        on
+        s.category_id = c.id
+        <where>
+            <if test="name != null">
+                and s.name like concat('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                and s.status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and s.category_id = #{categoryId}
+            </if>
+        </where>
+        order by s.create_time desc
+    </select>
+
+    <update id="update" parameterType="com.sky.entity.Setmeal">
+        UPDATE setmeal
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>
