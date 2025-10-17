@@ -34,5 +34,9 @@
         values (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{updateTime},
         #{createUser}, #{updateUser})
     </insert>
+    
+    <select id="queryIdByName" resultType="java.lang.Long">
+        select id from setmeal where name = #{name}
+    </select>
 
 </mapper>

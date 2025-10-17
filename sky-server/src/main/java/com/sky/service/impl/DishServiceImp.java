@@ -119,4 +119,12 @@ public class DishServiceImp implements DishService {
         return null;
     }
 
+    @Override
+    public List<Dish> dishListByCategoryId(Long categoryId) {
+
+        Dish build = Dish.builder().status(StatusConstant.ENABLE).categoryId(categoryId).build();
+        List<Dish> dishes = dishMapper.selectByCategoryId(build);
+        return dishes;
+    }
+
 }

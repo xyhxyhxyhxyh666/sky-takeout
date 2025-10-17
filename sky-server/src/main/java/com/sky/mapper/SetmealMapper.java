@@ -28,4 +28,6 @@ public interface SetmealMapper {
     int addSetmeal(Setmeal setmeal);
 
     List<Dish> getDishByCategory(Dish dish);
+
+    Long queryIdByName(String name);
 }
