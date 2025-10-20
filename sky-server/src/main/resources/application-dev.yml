@@ -11,3 +11,8 @@ sky:
     access-key-id: LTAI5tR3hGUfk4vgU4ofHVZP
     access-key-secret: XzkmlWpCgm4kW6vvFNfDwuXA9HcSqt
     bucket-name: xie-ssm-sky-takeout
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 0
