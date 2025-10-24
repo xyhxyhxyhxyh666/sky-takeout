@@ -37,4 +37,6 @@ public interface DishMapper {
     void update(Dish dish);
 
     List<Dish> selectByCategoryId(Dish build);
+
+    List<Dish> list(Dish dish);
 }
