@@ -23,7 +23,7 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (handler instanceof HandlerMethod) {
+        if (! (handler instanceof HandlerMethod)) {
             return true;
         }
 
