@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -385,6 +386,22 @@ public class OrderServiceImp  implements OrderService {
         orderMapper.update(build);
 
 
+        return Result.success();
+    }
+
+    @Override
+    public Result reminder(Long id) {
+
+        Orders orders = orderMapper.selectById(String.valueOf(id));
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        Map map = new HashMap();
+        map.put("type", 2);//2代表用户催单
+        map.put("orderId", id);
+        map.put("content", "订单号：" + orders.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
         return Result.success();
     }
 
