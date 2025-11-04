@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -35,4 +36,6 @@ public interface OrderMapper {
 
     @Select("select * from orders where status = #{toBeConfirmed} and order_time < #{time}")
     List<Orders> getByStatusAndOrderTimeOut(Integer toBeConfirmed, LocalDateTime time);
+
+    Double getTurnoverByDate(HashMap<Object, Object> map);
 }
