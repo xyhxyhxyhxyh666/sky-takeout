@@ -39,4 +39,7 @@ public interface DishMapper {
     List<Dish> selectByCategoryId(Dish build);
 
     List<Dish> list(Dish dish);
+
+    @Select("select count(id) from dish where status = #{status}")
+    Integer countByStatus(Integer enable);
 }

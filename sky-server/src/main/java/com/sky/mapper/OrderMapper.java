@@ -45,4 +45,10 @@ public interface OrderMapper {
     Integer getValidOrdersByDate(HashMap<Object, Object> map);
 
     ArrayList<GoodsSalesDTO> selectTop10(@Param("begin") LocalDateTime beginTime, @Param("end") LocalDateTime endTime);
+
+    @Select("select status,count(id) from orders where order_time > #{begin} and status = #{status}")
+    Integer countStatusByMap(HashMap<Object, Object> map);
+
+    @Select("select count(id) from orders where order_time > #{begin}")
+    Integer getTotal(HashMap<Object, Object> map);
 }
