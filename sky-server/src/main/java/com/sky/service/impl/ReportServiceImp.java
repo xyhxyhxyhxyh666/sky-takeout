@@ -1,17 +1,20 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.result.Result;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -140,5 +143,25 @@ public class ReportServiceImp implements ReportService {
                 .build();
         return Result.success(build);
 
+    }
+
+    @Override
+    public Result<SalesTop10ReportVO> top10(LocalDate begin, LocalDate end) {
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        ArrayList<GoodsSalesDTO> goodsSales = orderMapper.selectTop10(beginTime, endTime);
+        ArrayList<String> nameList = new ArrayList<>();
+        ArrayList<String> numberList = new ArrayList<>();
+        for (GoodsSalesDTO goodsSale : goodsSales) {
+            String name = goodsSale.getName();
+            String number = goodsSale.getNumber().toString();
+            nameList.add(name);
+            numberList.add(number);
+        }
+        SalesTop10ReportVO build = SalesTop10ReportVO.builder()
+                .nameList(StringUtils.join(nameList, ","))
+                .numberList(StringUtils.join(numberList, ","))
+                .build();
+        return Result.success(build);
     }
 }
