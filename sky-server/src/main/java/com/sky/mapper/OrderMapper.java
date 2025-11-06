@@ -30,7 +30,7 @@ public interface OrderMapper {
     @Select("select * from orders where id = #{id}")
     Orders selectById(String id);
 
-    @Select("select count(status) from orders where status = #{toBeConfirmed}")
+    @Select("select count(id) from orders where status = #{toBeConfirmed}")
     Integer countStatus(Integer toBeConfirmed);
 
 
@@ -38,4 +38,10 @@ public interface OrderMapper {
     List<Orders> getByStatusAndOrderTimeOut(Integer toBeConfirmed, LocalDateTime time);
 
     Double getTurnoverByDate(HashMap<Object, Object> map);
+
+    @Select("select count(id) from orders where order_time < #{end} and order_time > #{begin}")
+    Integer getTotalOrdersByDate(HashMap<Object, Object> map);
+
+    @Select("select count(id) from orders where status = #{status} and order_time < #{end} and order_time > #{begin}")
+    Integer getValidOrdersByDate(HashMap<Object, Object> map);
 }
